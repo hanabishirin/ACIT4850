@@ -15,7 +15,7 @@ and open the template in the editor.
         $squares = $position;
 
         $game = new Game($squares);
-        //$game->pick_move();
+        $game->pick_rand();
         $game->display();
         if ($game->winner('x')) {
             echo 'You win.';
@@ -24,6 +24,9 @@ and open the template in the editor.
         } else {
             echo 'No winner yet, but you are losing.';
         }
+        echo '<br/>';
+        $restart = '?board=---------';
+        echo '<td><a href=' . $restart . '>Start again</a></td>';
         ?>
     </body>
     <?php
@@ -31,6 +34,7 @@ and open the template in the editor.
     class Game {
 
         var $position;
+
         function display() {
             echo '<table cols=”3” style=”font­size:large; font­weight:bold”>';
             echo '<tr>'; // open the first row
@@ -51,35 +55,52 @@ and open the template in the editor.
         function winner($token) {
             for ($row = 0; $row < 3; $row++) {
                 $result = true;
-                $count =0;
+                $count = 0;
                 for ($col = 0; $col < 3; $col++) {
                     if ($this->position[3 * $row + $col] != $token) {
                         $result = false;
-                    }
-                    else{
+                    } else {
                         $count++;
                     }
-                    if($count == 3){
+                    if ($count == 3) {
                         return true;
                     }
                 }
             }
             for ($row = 0; $row < 3; $row++) {
                 $result = true;
-                $count =0;
+                $count = 0;
                 for ($col = 0; $col < 3; $col++) {
                     if ($this->position[$row + 3 * $col] != $token) {
                         $result = false;
-                    }
-                    else{
+                    } else {
                         $count++;
                     }
-                    if($count == 3){
+                    if ($count == 3) {
                         return true;
                     }
                 }
             }
-            
+
+            $ld = 0;
+            $rd = 0;
+            for ($count = 0; $count < 3; $count++) {
+                $result = false;
+
+                if ($this->position[$count * 4] == $token) {
+                    $ld++;
+                    if ($ld == 3) {
+                        return True;
+                    }
+                }
+                if ($this->position[2 + $count * 2] == $token) {
+                    $rd++;
+                    if ($rd == 3) {
+                        return True;
+                    }
+                }
+            }
+
             return $result;
         }
 
@@ -97,16 +118,32 @@ and open the template in the editor.
             // so return a cell containing an anchor and showing a hyphen
             return '<td><a href=' . $link . '>-</a></td>';
         }
-        
-        function pick_move(){
-            for ($check = 0; check < 9; $count++) {
+
+        function pick_move() {
+            for ($check = 0; $check < 9; $check++) {
                 if ($this->position[$check] == '-') {
                     $this->position[$check] = 'o';
-                    $location = $check;
-                    return; 
+                    return;
                 }
             }
         }
+
+        function pick_rand() {
+            $ran = true;
+            while ($ran == true) {
+                $guess = mt_rand(0, 8);
+                if ($this->position[$guess] == '-') {
+                    $this->position[$guess] = 'o';
+                    $ran = false;
+                }
+            }
+
+            function pick_smart() {
+                ;//pending work
+            }
+
+        }
+
     }
     ?>
 </html>
