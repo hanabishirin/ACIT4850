@@ -11,10 +11,13 @@ and open the template in the editor.
     </head>
     <body>
         <?php
-        $position = $_GET['board'];
-        $squares = $position;
+        
+        if (!isset($_GET['board'])) {
+            $game = new Game("---------");
+        } else {
+            $game = new Game($_GET['board']);
+        }
 
-        $game = new Game($squares);
         $game->pick_rand();
         $game->display();
         if ($game->winner('x')) {
